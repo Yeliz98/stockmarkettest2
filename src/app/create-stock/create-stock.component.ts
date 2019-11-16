@@ -16,15 +16,17 @@ export class CreateStockComponent {
   constructor() {
     this.stock = new Stock('test', '', 0, 0, 'NASDAQ');
    }
-
+/*
    setStockPrice(price){
      this.stock.price=price;
      this.stock.previousPrice=price;
    }
+   */
 
    createStock(stockForm) {
-     console.log('Create stock', stockForm);
+     console.log('Create stock', stockForm.value);
      if( stockForm.valid ) {
+       this.stock=stockForm.value.stock;
        console.log('Creating stock ', this.stock);
      }
      else {
