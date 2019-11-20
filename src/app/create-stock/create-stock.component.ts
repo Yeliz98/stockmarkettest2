@@ -1,38 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import {Stock} from '../stock-item/model/stock'
-
+import { Stock } from '../model/stock';
+import { StockService } from '../services/stock.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-create-stock',
   templateUrl: './create-stock.component.html',
-  styleUrls: ['./create-stock.component.css']
+  styleUrls: ['./create-stock.component.css'],
+  providers: [MessageService]
 })
 export class CreateStockComponent {
 
-  public stock:Stock;
-  public confirmed=false;
-  public exchanges=['NYSE', 'NASDAQ', 'OTHER'];
+  public stock: Stock;
+  public confirmed = false;
+  public exchanges = ['NYSE', 'NASDAQ', 'OTHER'];
+  constructor(private stockService: StockService,
+              public messageService: MessageService) {
+    this.stock =  new Stock('', '', 0, 0, 'NASDAQ');
+    this.messageService.message = 'Component Level: Hello Message Service';
+  }
 
-  constructor() {
-    this.stock = new Stock('test', '', 0, 0, 'NASDAQ');
-   }
-/*
-   setStockPrice(price){
-     this.stock.price=price;
-     this.stock.previousPrice=price;
-   }
-   */
+  setStockPrice(price) {
+    this.stock.price = price;
+    this.stock.previousPrice = price;
+  }
 
-   createStock(stockForm) {
-     console.log('Create stock', stockForm.value);
-     if( stockForm.valid ) {
-       this.stock=stockForm.value.stock;
-       console.log('Creating stock ', this.stock);
-     }
-     else {
-       console.error('Stock form is in an invalid state');
-     }
-   }
-
-
+  createStock(stockForm) {
+    if (stockForm.valid) {
+      let created = this.stockService.createStock(this.stock);
+      if (created) {
+        this.messageService.message =
+            'Successfully created stock with stock code: ' +
+            this.stock.code;
+        this.stock =  new Stock('', '', 0, 0, 'NASDAQ');
+      } else {
+        this.messageService.message = 'Stock with stock code: ' +
+            this.stock.code + ' already exists';
+      }
+    } else {
+      console.error('Stock form is in an invalid state');
+    }
+  }
 }
