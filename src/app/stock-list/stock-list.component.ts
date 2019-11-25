@@ -3,7 +3,7 @@ import { StockService } from '../services/stock.service';
 import {UserStoreService} from '../services/user-store.service';
 import { Stock } from '../model/stock';
 import { Observable } from 'rxjs/Observable';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -15,8 +15,10 @@ export class StockListComponent implements OnInit {
 
   //public stocks: Stock[];
   public stocks$: Observable<Stock[]>;
+  private page = 1;
   constructor(private stockService: StockService,
               private userStore: UserStoreService,
+              private router:Router,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -27,7 +29,19 @@ export class StockListComponent implements OnInit {
     //this.stocks$ = this.stockService.getStocks();
     console.log('Page No.: ',
                 this.route.snapshot.queryParamMap.get('page'));
+    this.route.queryParams.subscribe((params) => {
+      console.log('Page: ', params.page);
     this.stocks$ = this.stockService.getStocks();
+    });
+   
+  }
+
+  nextPage() {
+    this.router.navigate([], {
+      queryParams: {
+        page: ++this.page
+      }
+    })
   }
 /*
   onToggleFavorite(stock: Stock) {
