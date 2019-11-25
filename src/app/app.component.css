@@ -4,3 +4,9 @@ p {
 *{
   text-align: left;
 }
+.links, .links a {
+  padding:10px;
+}
+.links a.active {
+  background-color:grey;
+}
